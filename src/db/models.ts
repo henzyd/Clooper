@@ -32,9 +32,15 @@ type UserModelType = {
   email: string;
   phone: string;
   password: string;
+  is_admin: boolean;
+  is_active: boolean;
+  correctPassword: (
+    reqPassword: string,
+    userPassword: string
+  ) => Promise<boolean>;
 };
 
-const userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema<UserModelType>({
   first_name: {
     type: String,
     required: [true, "Please enter a first name"],
@@ -57,38 +63,36 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please enter a password"],
     minlength: 8,
+    select: false,
   },
   is_admin: {
     type: Boolean,
     default: false,
+    select: false,
   },
   is_active: {
     type: Boolean,
     default: true,
+    select: false,
   },
 });
 
-userSchema.statics.checkIfEmailExists = async function (email: string) {
-  //? This method is used to check if the email exist in the DB
-  if (!email) throw new Error("Invalid email address");
-  try {
-    const user = await this.findOne({ email });
-    if (user) return false;
-    return true;
-  } catch (err: any) {
-    console.log("error inside checkIfEmailExists method", err.message);
-  }
+// userSchema.pre("save", async function (next) {
+//   //? This function only runs if password was inputted or modified
+//   if (!this.isModified("password")) return next();
+
+//   //? Hashing the user's password with bcrypt before storing in the DB
+//   this.password = await bcrypt.hash(this.password, 12);
+
+//   next();
+// });
+
+userSchema.methods.correctPassword = async function (
+  reqPassword: string,
+  userPassword: string
+) {
+  return await bcrypt.compare(reqPassword, userPassword);
 };
-
-userSchema.pre("save", async function (next) {
-  //? This function only runs if password was inputted or modified
-  if (!this.isModified("password")) return next();
-
-  //? Hashing the user's password with bcrypt before storing in the DB
-  this.password = await bcrypt.hash(this.password, 12);
-
-  next();
-});
 
 const UserModel = mongoose.model("User", userSchema);
 

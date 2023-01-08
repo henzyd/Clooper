@@ -4,6 +4,6 @@ namespace NodeJS {
     // TEST: string;
     PORT: number;
     JWT_SECRET_KEY: string;
-    JWT_EXPIRE_IN: number;
+    JWT_EXPIRE_IN: string;
   }
 }
