@@ -1,6 +1,9 @@
 namespace NodeJS {
   interface ProcessEnv {
     DB_CONNECTION_STRING: string;
-    PORT: Number;
+    // TEST: string;
+    PORT: number;
+    JWT_SECRET_KEY: string;
+    JWT_EXPIRE_IN: number;
   }
 }
