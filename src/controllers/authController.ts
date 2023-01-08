@@ -77,7 +77,7 @@ async function logInUser(req: Request, res: Response, next: NextFunction) {
        password: String,
   
      Responses:
-       201: Success
+       200: Success
        500: Server error
    */
 
@@ -94,7 +94,7 @@ async function logInUser(req: Request, res: Response, next: NextFunction) {
 
   try {
     const token = signinJWT(user);
-    res.status(201).json({
+    res.status(200).json({
       status: "Success",
       message: `${user.first_name} ${user.last_name} has been logged in successfully`,
       token,
