@@ -97,4 +97,20 @@ async function loginMiddleware(
   next();
 }
 
-export { createUserMiddleware, loginMiddleware };
+function protectRoute(req: Request, res: Response, next: NextFunction) {
+  let token: string = "";
+  const bearerToken = req.headers.authorization;
+  if (bearerToken && bearerToken.startsWith("Bearer")) {
+    token = bearerToken.split(" ")[1];
+    console.log(token);
+  }
+  if (!token) {
+    res.status(401).json({
+      status: "fail",
+      message: "You need to be logged in to access this",
+    });
+  }
+  next();
+}
+
+export { createUserMiddleware, loginMiddleware, protectRoute };
