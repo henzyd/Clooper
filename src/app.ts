@@ -13,9 +13,9 @@ app.use(express.json());
 
 const basePath = "/api/v1";
 
-app.use(`${basePath}`, homeRouter);
-app.use(`${basePath}`, userRouter);
-app.use(`${basePath}`, authRouter);
-app.use(`${basePath}`, propertyRouter);
+app.use(`${basePath}/`, homeRouter);
+app.use(`${basePath}/users`, userRouter);
+app.use(`${basePath}/auth`, authRouter);
+app.use(`${basePath}/property`, propertyRouter);
 
 export default app;

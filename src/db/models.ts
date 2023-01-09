@@ -23,8 +23,11 @@
  * is_active
  */
 
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 import bcrypt from "bcryptjs";
+import slugify from "slugify";
+
+const Schema = mongoose.Schema;
 
 //? Types
 type UserModelType = {
@@ -42,20 +45,24 @@ type UserModelType = {
 };
 
 type PropertyModelType = {
+  owner: ObjectId;
   name: string;
+  slug: string;
   type: string;
   address: string;
   description: string;
-  image_url: string;
+  image_url: string[];
   total_rooms: number;
   occupancy_type: string;
   rent_amount: number;
   rent_frequency: string;
   is_published: boolean;
+  created_at: number;
+  updated_at: number;
 };
 
 //? Schemas
-const userSchema = new mongoose.Schema<UserModelType>({
+const userSchema = new Schema<UserModelType>({
   first_name: {
     type: String,
     required: [true, "Please enter a first name"],
@@ -92,11 +99,16 @@ const userSchema = new mongoose.Schema<UserModelType>({
   },
 });
 
-const propertySchema = new mongoose.Schema<PropertyModelType>({
+const propertySchema = new Schema<PropertyModelType>({
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
   name: {
     type: String,
     required: [true, "Please enter a name"],
   },
+  slug: String,
   address: {
     type: String,
     required: [true, "Please enter an address"],
@@ -110,7 +122,7 @@ const propertySchema = new mongoose.Schema<PropertyModelType>({
     required: [true, "Please enter a description"],
   },
   image_url: {
-    type: String,
+    type: [String],
     required: [true, "Please enter an image URL"],
   },
   total_rooms: {
@@ -119,6 +131,7 @@ const propertySchema = new mongoose.Schema<PropertyModelType>({
   },
   occupancy_type: {
     type: String,
+    required: false,
   },
   rent_amount: {
     type: Number,
@@ -131,7 +144,26 @@ const propertySchema = new mongoose.Schema<PropertyModelType>({
   is_published: {
     type: Boolean,
     default: false,
-  }, //! Add a publish date
+  },
+  created_at: Date,
+  updated_at: Date,
+});
+
+propertySchema.pre("save", function (next) {
+  this.slug = slugify.default(this.name, { lower: true });
+  this.is_published = false;
+  this.created_at = Date.now() - 1000;
+  this.updated_at = Date.now() - 1000;
+
+  if (this.isModified("name")) {
+    console.log("updating");
+
+    this.slug = slugify.default(this.name, { lower: true });
+    this.updated_at = Date.now() - 1000;
+  } else {
+    console.log("not updating");
+  }
+  next();
 });
 
 //? Methods
@@ -146,4 +178,4 @@ userSchema.methods.correctPassword = async function (
 const UserModel = mongoose.model("User", userSchema);
 const PropertyModel = mongoose.model("Property", propertySchema);
 
-export { UserModel, UserModelType, PropertyModel };
+export { UserModel, UserModelType, PropertyModel, PropertyModelType };

@@ -1,7 +1,15 @@
 import { Request, Response, NextFunction } from "express";
 import { phone as phoneCheck } from "phone";
 import validator from "validator";
-import { UserModelType } from "../db/models.js";
+import { UserModel, UserModelType } from "../db/models.js";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import { responseHandler, serverErrorResponse } from "../utils/appResponse.js";
+
+type DecodedType = {
+  user: UserModelType;
+  iat: number;
+  exp: number;
+};
 
 async function createUserMiddleware(
   req: Request,
@@ -97,19 +105,40 @@ async function loginMiddleware(
   next();
 }
 
-function protectRoute(req: Request, res: Response, next: NextFunction) {
+async function protectRoute(req: Request, res: Response, next: NextFunction) {
+  /**
+   * This middleware is used to make sure that only authenticated users are able to access routes
+   */
   let token: string = "";
   const bearerToken = req.headers.authorization;
   if (bearerToken && bearerToken.startsWith("Bearer")) {
     token = bearerToken.split(" ")[1];
-    console.log(token);
   }
   if (!token) {
-    res.status(401).json({
+    return res.status(401).json({
       status: "fail",
       message: "You need to be logged in to access this",
     });
   }
+  // console.log(token);
+
+  try {
+    const decoded: any = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    // console.log("this is the place :>>>>> ", decoded);
+
+    const currentUser = await UserModel.findById(decoded.user._id);
+    // console.log("this is the current user :>>>> ", currentUser);
+
+    if (!currentUser) {
+      return res.status(401).json({
+        message: "The user belonging to this token do not longer exist.",
+      });
+    }
+  } catch (err) {
+    console.log("in catch Middleware");
+    return responseHandler(res, 422, "fail", "Invalid JWT token");
+  }
+
   next();
 }
 

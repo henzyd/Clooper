@@ -7,9 +7,9 @@ import {
 
 const authRouter = express.Router();
 
-const mainRoute = "/auth";
+// const mainRoute = "/auth";
 
-authRouter.post(`${mainRoute}/signup`, createUserMiddleware, createUser);
-authRouter.post(`${mainRoute}/login`, loginMiddleware, logInUser);
+authRouter.post(`/signup`, createUserMiddleware, createUser);
+authRouter.post(`/login`, loginMiddleware, logInUser);
 
 export default authRouter;
