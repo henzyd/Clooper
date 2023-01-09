@@ -99,17 +99,53 @@ async function checkParamID(req: Request, res: Response, next: NextFunction) {
    */
 
   try {
-    const DBproperty = await PropertyModel.findById(req.params.id).populate(
+    const property = await PropertyModel.findById(req.params.id).populate(
       "owner"
     );
-    if (DBproperty) {
-      req.body._DBproperty = DBproperty;
-      return responseHandler(res, 200, "Success", undefined, DBproperty);
+    if (property) {
+      res.locals.property = property;
+      // return responseHandler(res, 200, "Success", undefined, property);
+    } else {
+      return responseHandler(res, 404, "Fail", "Property does not exist");
     }
   } catch (err) {
-    return responseHandler(res, 404, "fail", "Property not found");
+    const errMsg = serverErrorResponse(err);
+    res.status(500).json({ message: "Server error: " + errMsg });
   }
   next();
 }
 
-export { createPropertyMiddleware, checkParamID };
+async function modifyProperty(req: Request, res: Response, next: NextFunction) {
+  /**
+   * This middleware is responsible for modifying the properties in the DB
+   */
+
+  const token = req.headers.authorization;
+
+  if (token) {
+    const currentUser = res.locals.currentUser;
+    const property = res.locals.property;
+
+    if (currentUser && property) {
+      if (!property.owner._id.equals(currentUser._id)) {
+        return responseHandler(
+          res,
+          403,
+          "Fail",
+          "You are not allowed to access this"
+        );
+      }
+    } else {
+      return responseHandler(
+        res,
+        403,
+        "Fail",
+        "You are not allowed to access this"
+      );
+    }
+  }
+
+  next();
+}
+
+export { createPropertyMiddleware, checkParamID, modifyProperty };

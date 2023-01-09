@@ -121,23 +121,29 @@ async function protectRoute(req: Request, res: Response, next: NextFunction) {
     });
   }
   // console.log(token);
+  let currentUser;
 
   try {
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET_KEY);
     // console.log("this is the place :>>>>> ", decoded);
 
-    const currentUser = await UserModel.findById(decoded.user._id);
+    currentUser = await UserModel.findById(decoded.user._id);
     // console.log("this is the current user :>>>> ", currentUser);
 
     if (!currentUser) {
-      return res.status(401).json({
-        message: "The user belonging to this token do not longer exist.",
-      });
+      return responseHandler(
+        res,
+        401,
+        "fail",
+        "The user belonging to this token do not longer exist."
+      );
     }
   } catch (err) {
     console.log("in catch Middleware");
     return responseHandler(res, 422, "fail", "Invalid JWT token");
   }
+
+  res.locals.currentUser = currentUser;
 
   next();
 }

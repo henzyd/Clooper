@@ -5,6 +5,7 @@ import {
   UserModel,
   UserModelType,
 } from "../db/models.js";
+import { checkParamID } from "../middleware/propertyMiddleware.js";
 import { responseHandler, serverErrorResponse } from "../utils/appResponse.js";
 import { getCurrentUser } from "../utils/currentUser.js";
 
@@ -13,7 +14,7 @@ async function createProperty(req: Request, res: Response, next: NextFunction) {
    * This controller is responsible for creating a new property
    */
 
-  const currentUser = await UserModel.findById("63bb37f5745072a3de6064cb");
+  const currentUser = res.locals.currentUser;
   // console.log(currentUser);
 
   //? Creating an instance of the PropertyModel
@@ -56,34 +57,15 @@ async function getProperty(req: Request, res: Response, next: NextFunction) {
   /**
    * This controller is responsible for getting a property
    */
-  console.log("this is snj s  j", req.body);
+  console.log("this is snj s  j", res.locals);
 
-  responseHandler(res, 200, "Success", undefined, req.body._DBproperty);
+  responseHandler(res, 200, "Success", undefined, res.locals.property);
 }
 
 async function updateProperty(req: Request, res: Response, next: NextFunction) {
   /**
    * This controller is responsible for updating a property
    */
-
-  const token = req.headers.authorization;
-
-  if (token) {
-    const currentUser: any = await getCurrentUser(token.split(" ")[1], res);
-    const property = await PropertyModel.findById(req.params.id);
-
-    if (currentUser && property) {
-      if (property.owner === currentUser._id) {
-        console.log("Related");
-      } else {
-        console.log("Not Related");
-      }
-    } else {
-      return responseHandler(res, 404, "Fail", "Property not found");
-    }
-    console.log("this the current user :>>> ", currentUser);
-    console.log("this the property :>>> ", property);
-  }
 
   try {
     const property = await PropertyModel.findByIdAndUpdate(
@@ -92,11 +74,28 @@ async function updateProperty(req: Request, res: Response, next: NextFunction) {
       { new: true }
     );
     if (property) {
-      return responseHandler(res, 200, "Success", undefined, property);
+      responseHandler(res, 200, "Success", undefined, property);
     }
   } catch (err) {
-    // console.log(err);
+    const errMsg = serverErrorResponse(err);
+    res.status(500).json({ message: "Server error: " + errMsg });
   }
 }
 
-export { createProperty, getAllProperty, getProperty, updateProperty };
+async function deleteProperty(req: Request, res: Response, next: NextFunction) {
+  const property = await PropertyModel.findByIdAndDelete(req.params.id);
+
+  if (!property) {
+    return responseHandler(res, 404, "Fail", "Property not found");
+  }
+
+  responseHandler(res, 204, "Success", "Property has been deleted");
+}
+
+export {
+  createProperty,
+  getAllProperty,
+  getProperty,
+  updateProperty,
+  deleteProperty,
+};
