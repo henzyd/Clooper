@@ -9,8 +9,6 @@ type Req$ResType = {
 };
 
 async function getAllUsers(Req$Res: Req$ResType) {
-  console.log("inddnj eddme j");
-
   try {
     const users = await UserModel.find();
     Req$Res.res.status(200).json({

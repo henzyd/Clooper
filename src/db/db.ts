@@ -9,6 +9,5 @@ const option = {
 };
 mongoose.connect(process.env.DB_CONNECTION_STRING);
 const db = mongoose.connection;
-console.log(db.db);
 
 export default db;

@@ -14,7 +14,7 @@
  */
 
 /**
-// ? NOTE: User Attributes
+// ? User Attributes
  * first_name,
  * last_name,
  * email,
@@ -23,9 +23,13 @@
  * is_active
  */
 
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 import bcrypt from "bcryptjs";
+import slugify from "slugify";
 
+const Schema = mongoose.Schema;
+
+//? Types
 type UserModelType = {
   first_name: string;
   last_name: string;
@@ -40,7 +44,25 @@ type UserModelType = {
   ) => Promise<boolean>;
 };
 
-const userSchema = new mongoose.Schema<UserModelType>({
+type PropertyModelType = {
+  owner: ObjectId;
+  name: string;
+  slug: string;
+  type: string;
+  address: string;
+  description: string;
+  image_url: string[];
+  total_rooms: number;
+  occupancy_type: string;
+  rent_amount: number;
+  rent_frequency: string;
+  is_published: boolean;
+  created_at: number;
+  updated_at: number;
+};
+
+//? Schemas
+const userSchema = new Schema<UserModelType>({
   first_name: {
     type: String,
     required: [true, "Please enter a first name"],
@@ -77,16 +99,74 @@ const userSchema = new mongoose.Schema<UserModelType>({
   },
 });
 
-// userSchema.pre("save", async function (next) {
-//   //? This function only runs if password was inputted or modified
-//   if (!this.isModified("password")) return next();
+const propertySchema = new Schema<PropertyModelType>({
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
+  name: {
+    type: String,
+    required: [true, "Please enter a name"],
+  },
+  slug: String,
+  address: {
+    type: String,
+    required: [true, "Please enter an address"],
+  },
+  type: {
+    type: String,
+    required: [true, "Please enter a type"],
+  },
+  description: {
+    type: String,
+    required: [true, "Please enter a description"],
+  },
+  image_url: {
+    type: [String],
+    required: [true, "Please enter an image URL"],
+  },
+  total_rooms: {
+    type: Number,
+    required: [true, "Please enter a total rooms"],
+  },
+  occupancy_type: {
+    type: String,
+    required: false,
+  },
+  rent_amount: {
+    type: Number,
+    required: [true, "Please enter a rent amount"],
+  },
+  rent_frequency: {
+    type: String,
+    required: [true, "Please enter a rent frequency"],
+  },
+  is_published: {
+    type: Boolean,
+    default: false,
+  },
+  created_at: Date,
+  updated_at: Date,
+});
 
-//   //? Hashing the user's password with bcrypt before storing in the DB
-//   this.password = await bcrypt.hash(this.password, 12);
+propertySchema.pre("save", function (next) {
+  this.slug = slugify.default(this.name, { lower: true });
+  this.is_published = false;
+  this.created_at = Date.now() - 1000;
+  this.updated_at = Date.now() - 1000;
 
-//   next();
-// });
+  if (this.isModified("name")) {
+    console.log("updating");
 
+    this.slug = slugify.default(this.name, { lower: true });
+    this.updated_at = Date.now() - 1000;
+  } else {
+    console.log("not updating");
+  }
+  next();
+});
+
+//? Methods
 userSchema.methods.correctPassword = async function (
   reqPassword: string,
   userPassword: string
@@ -94,6 +174,8 @@ userSchema.methods.correctPassword = async function (
   return await bcrypt.compare(reqPassword, userPassword);
 };
 
+//? Models
 const UserModel = mongoose.model("User", userSchema);
+const PropertyModel = mongoose.model("Property", propertySchema);
 
-export { UserModel, UserModelType };
+export { UserModel, UserModelType, PropertyModel, PropertyModelType };
