@@ -1,5 +1,9 @@
 import express from "express";
-import { createUser, logInUser } from "../controllers/authController.js";
+import {
+  createAdmin,
+  createUser,
+  logInUser,
+} from "../controllers/authController.js";
 import {
   createUserMiddleware,
   loginMiddleware,
@@ -7,9 +11,19 @@ import {
 
 const authRouter = express.Router();
 
-// const mainRoute = "/auth";
+const adminEncryptedRoute = "";
 
 authRouter.post(`/signup`, createUserMiddleware, createUser);
 authRouter.post(`/login`, loginMiddleware, logInUser);
+authRouter.post(
+  `${adminEncryptedRoute}/admin-signup`,
+  createUserMiddleware,
+  createAdmin
+);
+// authRouter.post(
+//   `${adminEncryptedRoute}/admin-login`,
+//   loginMiddleware,
+//   adminLogin
+// );
 
 export default authRouter;

@@ -1,13 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import {
-  PropertyModel,
-  PropertyModelType,
-  UserModel,
-  UserModelType,
-} from "../db/models.js";
-import { checkParamID } from "../middleware/propertyMiddleware.js";
+import { PropertyModel, PropertyModelType } from "../db/models.js";
 import { responseHandler, serverErrorResponse } from "../utils/appResponse.js";
-import { getCurrentUser } from "../utils/currentUser.js";
+import { sendNotificationEmail } from "../utils/mailing.js";
 
 async function createProperty(req: Request, res: Response, next: NextFunction) {
   /**
@@ -15,7 +9,6 @@ async function createProperty(req: Request, res: Response, next: NextFunction) {
    */
 
   const currentUser = res.locals.currentUser;
-  // console.log(currentUser);
 
   //? Creating an instance of the PropertyModel
   const property = new PropertyModel<PropertyModelType>({
@@ -26,6 +19,11 @@ async function createProperty(req: Request, res: Response, next: NextFunction) {
   //? Saving the data and catching errors
   try {
     const newProperty = await property.save();
+    // sendNotificationEmail(
+    //   "henzydee@gmail.com",
+    //   newProperty,
+    //   "../templates/notificationEmail.html"
+    // );
     responseHandler(
       res,
       201,
@@ -57,7 +55,12 @@ async function getProperty(req: Request, res: Response, next: NextFunction) {
   /**
    * This controller is responsible for getting a property
    */
-  console.log("this is snj s  j", res.locals);
+  console.log("this is snj s  j", res.locals.property);
+  // sendNotificationEmail(
+  //   "henzydee@gmail.com",
+  //   res.locals.property,
+  //   "../templates/notificationEmail.pug"
+  // );
 
   responseHandler(res, 200, "Success", undefined, res.locals.property);
 }
