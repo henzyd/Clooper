@@ -1,0 +1,18 @@
+div
+  h Name: {{email_check}}
+  p Address: {{address}}
+  p Type: {{type}}
+  p Description: {{description}}
+  p ID: {{_id}}
+  p Slug: {{slug}}
+  h2 Image URLs
+  ul
+    each img in image_url
+      li {{img}}
+  p Total rooms: {{total_rooms}}
+  p Occupancy type: {{occupancy_type}}
+  p Rent amount: {{rent_amount}}
+  p Rent frequency: {{rent_frequency}}
+  p Is published: {{is_published}}
+  p Created at: {{created_at}}
+  p Updated at: {{updated_at}}

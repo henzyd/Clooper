@@ -127,7 +127,9 @@ async function protectRoute(req: Request, res: Response, next: NextFunction) {
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET_KEY);
     // console.log("this is the place :>>>>> ", decoded);
 
-    currentUser = await UserModel.findById(decoded.user._id);
+    currentUser = await UserModel.findById(decoded.user._id).select(
+      "+is_admin"
+    );
     // console.log("this is the current user :>>>> ", currentUser);
 
     if (!currentUser) {

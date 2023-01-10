@@ -125,9 +125,10 @@ async function modifyProperty(req: Request, res: Response, next: NextFunction) {
   if (token) {
     const currentUser = res.locals.currentUser;
     const property = res.locals.property;
+    const admin = currentUser.is_admin;
 
     if (currentUser && property) {
-      if (!property.owner._id.equals(currentUser._id)) {
+      if (!property.owner._id.equals(currentUser._id) && !admin) {
         return responseHandler(
           res,
           403,
