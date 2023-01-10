@@ -3,6 +3,7 @@ import {
   createAdmin,
   createUser,
   logInUser,
+  logInAdmin,
 } from "../controllers/authController.js";
 import {
   createUserMiddleware,
@@ -20,10 +21,10 @@ authRouter.post(
   createUserMiddleware,
   createAdmin
 );
-// authRouter.post(
-//   `${adminEncryptedRoute}/admin-login`,
-//   loginMiddleware,
-//   adminLogin
-// );
+authRouter.post(
+  `${adminEncryptedRoute}/admin-login`,
+  loginMiddleware,
+  logInAdmin
+);
 
 export default authRouter;
