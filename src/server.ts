@@ -7,7 +7,7 @@ dotenv.config();
 db.on("error", (err) => console.log("Error :>> ", err));
 db.once("open", () => console.log("Connected to Database"));
 
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log("Server listening at http://localhost:" + port);
 });
