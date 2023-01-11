@@ -5,5 +5,6 @@ namespace NodeJS {
     PORT: number;
     JWT_SECRET_KEY: string;
     JWT_EXPIRE_IN: string;
+    ADMIN_HASH_ROUTE: string;
   }
 }
