@@ -11,6 +11,7 @@ import homeRouter from "./routes/home.js";
 import userRouter from "./routes/user.js";
 import authRouter from "./routes/auth.js";
 import propertyRouter from "./routes/property.js";
+import adminControl from "./routes/admin.js";
 
 const app = express();
 
@@ -45,5 +46,6 @@ app.use(`${basePath}/`, homeRouter);
 app.use(`${basePath}/users`, userRouter);
 app.use(`${basePath}/auth`, authRouter);
 app.use(`${basePath}/property`, propertyRouter);
+app.use(`${basePath}/${process.env.ADMIN_HASH_ROUTE}`, adminControl);
 
 export default app;

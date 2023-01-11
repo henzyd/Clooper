@@ -22,7 +22,7 @@ function serverErrorResponse(err: unknown): string {
 function responseHandler(
   res: Response,
   statusCode: number,
-  status: string,
+  status?: string,
   message?: string,
   data?: any
 ) {
@@ -37,6 +37,11 @@ function responseHandler(
     return res.status(statusCode).json({
       status: status,
       data: data,
+    });
+  }
+  if (!status) {
+    return res.status(statusCode).json({
+      message: message,
     });
   }
   return res.status(statusCode).json({
