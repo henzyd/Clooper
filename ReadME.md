@@ -10,7 +10,7 @@ https://henzyd-clooper.onrender.com/api/v1
 
 **Users path**
 
-https://henzyd-clooper.onrender.com/api/v1/auth/signup --> `POST` Sign up
+https://henzyd-clooper.onrender.com/api/v1/auth/signup --> `POST` Sign up'\n'
 https://henzyd-clooper.onrender.com/api/v1/auth/login --> `POST` Login
 https://henzyd-clooper.onrender.com/api/v1/users --> `GET` Getting all users
 https://henzyd-clooper.onrender.com/api/v1/users/:id --> `GET` Getting a user
