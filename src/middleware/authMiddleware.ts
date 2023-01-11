@@ -120,17 +120,19 @@ async function protectRoute(req: Request, res: Response, next: NextFunction) {
       message: "You need to be logged in to access this",
     });
   }
-  // console.log(token);
   let currentUser;
 
   try {
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    // console.log("this is the place :>>>>> ", decoded);
 
-    currentUser = await UserModel.findById(decoded.user._id).select(
-      "+is_admin"
-    );
-    // console.log("this is the current user :>>>> ", currentUser);
+    currentUser = await UserModel.findById(decoded.user._id).select([
+      "+is_admin",
+      "+is_active",
+    ]);
+
+    if (!currentUser?.is_active) {
+      return responseHandler(res, 401, "Fail", "This user is not active");
+    }
 
     if (!currentUser) {
       return responseHandler(
@@ -141,7 +143,6 @@ async function protectRoute(req: Request, res: Response, next: NextFunction) {
       );
     }
   } catch (err) {
-    console.log("in catch Middleware");
     return responseHandler(res, 422, "fail", "Invalid JWT token");
   }
 
