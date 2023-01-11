@@ -178,4 +178,10 @@ userSchema.methods.correctPassword = async function (
 const UserModel = mongoose.model("User", userSchema);
 const PropertyModel = mongoose.model("Property", propertySchema);
 
-export { UserModel, UserModelType, PropertyModel, PropertyModelType };
+export {
+  UserModel,
+  UserModelType,
+  PropertyModel,
+  PropertyModelType,
+  userSchema,
+};
