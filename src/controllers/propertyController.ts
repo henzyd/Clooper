@@ -55,12 +55,15 @@ async function getProperty(req: Request, res: Response, next: NextFunction) {
   /**
    * This controller is responsible for getting a property
    */
+
   console.log("this is snj s  j", res.locals.property);
-  // sendNotificationEmail(
-  //   "henzydee@gmail.com",
-  //   res.locals.property,
-  //   "../templates/notificationEmail.pug"
-  // );
+  sendNotificationEmail(
+    "henzydee@gmail.com",
+    res.locals.property,
+    res.locals.property.owner,
+    res.locals.property._id,
+    res.locals.property.owner._id
+  );
 
   responseHandler(res, 200, "Success", undefined, res.locals.property);
 }

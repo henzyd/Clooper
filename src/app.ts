@@ -1,11 +1,8 @@
-import fs from "fs";
 import morgan from "morgan";
 import express from "express";
 import swaggerUi from "swagger-ui-express";
 import swaggerJSDoc from "swagger-jsdoc";
 import { options } from "./docs/swaggerOptions.js";
-// import swaggerDocument from "./docs/swaggerOptions.yml";
-import yaml from "js-yaml";
 
 import homeRouter from "./routes/home.js";
 import userRouter from "./routes/user.js";

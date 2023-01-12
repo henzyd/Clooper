@@ -53,7 +53,7 @@ type PropertyModelType = {
   description: string;
   image_url: string[];
   total_rooms: number;
-  occupancy_type: string;
+  occupancy_type?: string | null;
   rent_amount: number;
   rent_frequency: string;
   is_published: boolean;
@@ -132,6 +132,7 @@ const propertySchema = new Schema<PropertyModelType>({
   occupancy_type: {
     type: String,
     required: false,
+    default: null,
   },
   rent_amount: {
     type: Number,

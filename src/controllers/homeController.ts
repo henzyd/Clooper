@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
+import { responseHandler } from "../utils/appResponse.js";
 
 async function welcomeMessage(req: Request, res: Response) {
-  res.status(200).json({ message: "Welcome to property endpoint" });
+  responseHandler(res, 200, "Success", "Welcome to property endpoint");
 }
 
 export { welcomeMessage };
