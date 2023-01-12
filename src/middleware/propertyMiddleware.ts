@@ -23,47 +23,33 @@ async function createPropertyMiddleware(
     rent_amount,
     rent_frequency,
   }: PropertyModelType = req.body;
-  //   {
-  //     "name": "uche",
-  //     "address": "address",
-  //     "type": "type",
-  //     "description": "description",
-  //     "image_url": ["image_url", "image_url", "image_url"],
-  //     "total_rooms": 3,
-  //     "occupancy_type": "occupancy_type",
-  //     "rent_amount": 3,
-  //     "rent_frequency": "rent_frequency",
-  //     "is_published": true
-  // }
 
   //? Check if all required keys in req.body is present
   if (!name) {
-    return responseHandler(res, 404, "fail", "Name is required");
+    return responseHandler(res, 404, "Fail", "Name is required");
   }
   if (!address) {
-    return responseHandler(res, 404, "fail", "Address is required");
+    return responseHandler(res, 404, "Fail", "Address is required");
   }
   if (!type) {
-    return responseHandler(res, 404, "fail", "Type is required");
+    return responseHandler(res, 404, "Fail", "Type is required");
   }
   if (!description) {
-    return responseHandler(res, 404, "fail", "Description is required");
+    return responseHandler(res, 404, "Fail", "Description is required");
   }
   if (!image_url) {
-    return responseHandler(res, 404, "fail", "Image URL is required");
+    return responseHandler(res, 404, "Fail", "Image URL is required");
   }
   if (!total_rooms) {
-    return responseHandler(res, 404, "fail", "Total Rooms is required");
-  }
-  if (!occupancy_type) {
-    return responseHandler(res, 404, "fail", "Occupancy Type is required");
+    return responseHandler(res, 404, "Fail", "Total Rooms is required");
   }
   if (!rent_amount) {
-    return responseHandler(res, 404, "fail", "Rent Amount is required");
+    return responseHandler(res, 404, "Fail", "Rent Amount is required");
   }
   if (!rent_frequency) {
-    return responseHandler(res, 404, "fail", "Rent Frequency is required");
+    return responseHandler(res, 404, "Fail", "Rent Frequency is required");
   }
+
   next();
 }
 
@@ -104,7 +90,6 @@ async function checkParamID(req: Request, res: Response, next: NextFunction) {
     );
     if (property) {
       res.locals.property = property;
-      // return responseHandler(res, 200, "Success", undefined, property);
     } else {
       return responseHandler(res, 404, "Fail", "Property does not exist");
     }

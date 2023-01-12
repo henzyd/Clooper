@@ -18,7 +18,7 @@ const propertyRouter = express.Router();
 propertyRouter
   .route("/")
   .get(protectRoute, getAllProperty)
-  .post(protectRoute, createProperty);
+  .post([protectRoute, createPropertyMiddleware], createProperty);
 
 propertyRouter
   .route("/:id")

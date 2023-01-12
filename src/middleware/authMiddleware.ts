@@ -1,15 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { phone as phoneCheck } from "phone";
 import validator from "validator";
-import { UserModel, UserModelType } from "../db/models.js";
-import jwt, { JwtPayload } from "jsonwebtoken";
-import { responseHandler, serverErrorResponse } from "../utils/appResponse.js";
-
-type DecodedType = {
-  user: UserModelType;
-  iat: number;
-  exp: number;
-};
+import { UserModel } from "../db/models.js";
+import jwt from "jsonwebtoken";
+import { responseHandler } from "../utils/appResponse.js";
 
 async function createUserMiddleware(
   req: Request,
@@ -24,30 +18,15 @@ async function createUserMiddleware(
 
   //? Check if all keys in req.body is present
   if (!first_name) {
-    return res.status(400).json({
-      status: "error",
-      message: "First name is required",
-    });
+    return responseHandler(res, 400, "Error", "First name is required");
   } else if (!last_name) {
-    return res.status(400).json({
-      status: "error",
-      message: "Last name is required",
-    });
+    return responseHandler(res, 400, "Error", "Lst name is required");
   } else if (!email) {
-    return res.status(400).json({
-      status: "error",
-      message: "Email is required",
-    });
+    return responseHandler(res, 400, "Error", "Email is required");
   } else if (!phone) {
-    return res.status(400).json({
-      status: "error",
-      message: "Phone number is required",
-    });
+    return responseHandler(res, 400, "Error", "Phone is required");
   } else if (!password) {
-    return res.status(400).json({
-      status: "error",
-      message: "Password is required",
-    });
+    return responseHandler(res, 400, "Error", "Password is required");
   }
 
   //? Checking if the email and phone are valid
@@ -55,18 +34,17 @@ async function createUserMiddleware(
   const phoneObj = phoneCheck(phone);
   const phoneIsValid = phoneObj.isValid;
   if (!emailIsValid || !phoneIsValid) {
-    return res.status(422).json({
-      status: "error",
-      message: "Invalid email or phone",
-    });
+    return responseHandler(res, 422, "Error", "Invalid email or phone");
   }
 
   //? Check if password is meet the expected length
   if (password.length < 8) {
-    return res.status(400).json({
-      status: "error",
-      message: "Password must be at least 8 characters long",
-    });
+    return responseHandler(
+      res,
+      400,
+      "Error",
+      "Password must be at least 8 characters long"
+    );
   }
 
   next();
@@ -84,10 +62,12 @@ async function loginMiddleware(
 
   //? Check if email and password keys is present
   if (!email || !password) {
-    return res.status(400).json({
-      status: "error",
-      message: "Email and password are required",
-    });
+    return responseHandler(
+      res,
+      400,
+      "error",
+      "Email and password are required"
+    );
   }
 
   //? Check if the email and password are valid
@@ -96,10 +76,7 @@ async function loginMiddleware(
     min: 8,
   });
   if (!emailIsValid || !passwordIsValid) {
-    return res.status(422).json({
-      status: "fail",
-      message: "Invalid email or password",
-    });
+    return responseHandler(res, 422, "Fail", "Invalid email or password");
   }
 
   next();
@@ -115,10 +92,12 @@ async function protectRoute(req: Request, res: Response, next: NextFunction) {
     token = bearerToken.split(" ")[1];
   }
   if (!token) {
-    return res.status(401).json({
-      status: "fail",
-      message: "You need to be logged in to access this",
-    });
+    return responseHandler(
+      res,
+      401,
+      "Fail",
+      "You need to be logged in to access this"
+    );
   }
   let currentUser;
 
@@ -138,12 +117,12 @@ async function protectRoute(req: Request, res: Response, next: NextFunction) {
       return responseHandler(
         res,
         401,
-        "fail",
+        "Fail",
         "The user belonging to this token do not longer exist."
       );
     }
   } catch (err) {
-    return responseHandler(res, 422, "fail", "Invalid JWT token");
+    return responseHandler(res, 422, "Fail", "Invalid JWT token");
   }
 
   res.locals.currentUser = currentUser;
