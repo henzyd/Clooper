@@ -89,6 +89,10 @@ async function updateProperty(req: Request, res: Response, next: NextFunction) {
 }
 
 async function deleteProperty(req: Request, res: Response, next: NextFunction) {
+  /**
+   * This controller is responsible for deleting properties
+   */
+
   const property = await PropertyModel.findByIdAndDelete(req.params.id);
 
   if (!property) {

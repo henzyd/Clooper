@@ -90,7 +90,6 @@ async function checkParamID(req: Request, res: Response, next: NextFunction) {
     );
     if (property) {
       res.locals.property = property;
-      // return responseHandler(res, 200, "Success", undefined, property);
     } else {
       return responseHandler(res, 404, "Fail", "Property does not exist");
     }
