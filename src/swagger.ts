@@ -12,11 +12,11 @@ const doc = {
     description:
       "This is a property manager built with Express.js, TypeScript and Mongoose",
   },
-  host: "http://localhost:3020",
-  // host: "https://henzyd-clooper.onrender.com",
+  // host: "http://localhost:3020",
+  host: "https://henzyd-clooper.onrender.com",
 };
 
-const outputFile = `${__dirname}/docs/swagger_output.json`;
-const endpointsFiles = [`${__dirname}/app.js`];
+const outputFile = `dist/docs/swagger_output.json`;
+const endpointsFiles = [`dist/app.js`];
 
 swaggerAutogen(outputFile, endpointsFiles, doc);
