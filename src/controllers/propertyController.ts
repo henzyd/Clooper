@@ -19,10 +19,15 @@ async function createProperty(req: Request, res: Response, next: NextFunction) {
   //? Saving the data and catching errors
   try {
     const newProperty = await property.save();
+    if (!newProperty) {
+      return responseHandler(res, 304, "Fail", "property return nothing");
+    }
     // sendNotificationEmail(
     //   "henzydee@gmail.com",
     //   newProperty,
-    //   "../templates/notificationEmail.html"
+    //   newProperty.owner,
+    //   newProperty._id,
+    //   newProperty.owner._id
     // );
     responseHandler(
       res,

@@ -1,11 +1,12 @@
+import { Types } from "mongoose";
 import nodemailer from "nodemailer";
 import { PropertyModelType, UserModelType } from "../db/models.js";
 
 function emailMessage(
   data: PropertyModelType,
   dataOwner: UserModelType,
-  propertyID: string,
-  ownerID: string
+  propertyID: Types.ObjectId,
+  ownerID: Types.ObjectId
 ) {
   const emailHtml = `
   <div>
@@ -26,12 +27,16 @@ function emailMessage(
       dataOwner.phone
     }</p>
     <div style="padding-left: 20px;">
-      <p>Name of Property: ${data.name}</p>
-      <p>ID: ${propertyID} </p>
-      <p>Address: ${data.address}</p>
-      <p>Type: ${data.type} </p>
-      <p>Description: ${data.description} </p>
-      <p>Slug: ${data.slug} </p>
+      <p><span style="font-weight: 700;">Name of Property:</span> ${
+        data.name
+      }</p>
+      <p><span style="font-weight: 700;">ID:</span> ${propertyID} </p>
+      <p><span style="font-weight: 700;">Address:</span> ${data.address}</p>
+      <p><span style="font-weight: 700;">Type:</span> ${data.type} </p>
+      <p><span style="font-weight: 700;">Description:</span> ${
+        data.description
+      } </p>
+      <p><span style="font-weight: 700;">Slug:</span> ${data.slug} </p>
       <div>
         <p>Image URLs</p>
         <p>${data.image_url}</p>
@@ -43,13 +48,27 @@ function emailMessage(
         </div>
       </div>
         
-      <p> Total rooms: ${data.total_rooms} </p>
-      <p> Occupancy type: ${data.occupancy_type} </p>
-      <p> Rent amount: ${data.rent_amount} </p>
-      <p> Rent frequency: ${data.rent_frequency} </p>
-      <p> Is published: ${data.is_published} </p>
-      <p> Created at: ${data.created_at} </p>
-      <p> Updated at: ${data.updated_at} </p>
+      <p><span style="font-weight: 700;">Total rooms:</span> ${
+        data.total_rooms
+      } </p>
+      <p><span style="font-weight: 700;">Occupancy type:</span> ${
+        data.occupancy_type
+      } </p>
+      <p><span style="font-weight: 700;">Rent amount:</span> ${
+        data.rent_amount
+      } </p>
+      <p><span style="font-weight: 700;">Rent frequency:</span> ${
+        data.rent_frequency
+      } </p>
+      <p><span style="font-weight: 700;">Is published:</span> ${
+        data.is_published
+      } </p>
+      <p><span style="font-weight: 700;">Created at:</span> ${
+        data.created_at
+      } </p>
+      <p><span style="font-weight: 700;">Updated at:</span> ${
+        data.updated_at
+      } </p>
     </div>
   </div>  
     `;
@@ -61,9 +80,9 @@ function emailMessage(
 async function sendNotificationEmail(
   email: string,
   data: PropertyModelType,
-  dataOwner: UserModelType,
-  propertyID: string,
-  ownerID: string
+  dataOwner: any,
+  propertyID: Types.ObjectId,
+  ownerID: Types.ObjectId
 ) {
   let transporter = nodemailer.createTransport({
     service: "gmail",
