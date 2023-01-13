@@ -29,58 +29,85 @@ const options = {
     ],
     paths: {
       "/auth": {
-        post: [
-          { tags: "auth" },
-          { description: "Signup a user" },
-          { operationId: "userSignup" },
-          {
-            requestBody: {
-              description: "Create a new user",
-              content: {
-                "application/json": {
-                  schema: {
-                    properties: {
-                      first_name: {
-                        type: String,
-                      },
-                      last_name: {
-                        type: String,
-                        required: [true, "Please enter a last name"],
-                      },
-                      email: {
-                        type: String,
-                        unique: true,
-                        required: [true, "Please enter an email address"],
-                      },
-                      phone: {
-                        type: String,
-                        unique: true,
-                        required: [true, "Please enter a phone number"],
-                      },
-                      password: {
-                        type: String,
-                        required: [true, "Please enter a password"],
-                        minlength: 8,
-                        select: false,
-                      },
-                      is_admin: {
-                        type: Boolean,
-                        default: false,
-                        select: false,
-                      },
-                      is_active: {
-                        type: Boolean,
-                        default: true,
-                        select: false,
-                      },
-                    },
-                  },
+        get: {
+          summary: "Get all the tasks",
+          description: "Get all the tasks",
+          produces: ["application/json"],
+          parameters: [],
+          responses: {
+            "200": {
+              description: "successful operation",
+              schema: {
+                type: "array",
+                items: {
+                  
+                  // first_name: {
+                  //   type: String,
+                  // },
+                  // $ref: "#/definitions/todosResponse",
                 },
               },
-              //   required: true,
+            },
+            "400": {
+              description: "Invalid status value",
+              schema: {
+                $ref: "#/definitions/InvalidResponse",
+              },
             },
           },
-        ],
+        },
+        // post: [
+        //   // { tags: "auth" },
+        //   // { description: "Signup a user" },
+        //   // { operationId: "userSignup" },
+        //   {
+        //     requestBody: {
+        //       description: "Create a new user",
+        //       content: {
+        //         "application/json": {
+        //           schema: {
+        //             properties: {
+        //               first_name: {
+        //                 type: String,
+        //               },
+        //               last_name: {
+        //                 type: String,
+        //                 required: [true, "Please enter a last name"],
+        //               },
+        //               email: {
+        //                 type: String,
+        //                 unique: true,
+        //                 required: [true, "Please enter an email address"],
+        //               },
+        //               phone: {
+        //                 type: String,
+        //                 unique: true,
+        //                 required: [true, "Please enter a phone number"],
+        //               },
+        //               password: {
+        //                 type: String,
+        //                 required: [true, "Please enter a password"],
+        //                 minlength: 8,
+        //                 select: false,
+        //               },
+        //               is_admin: {
+        //                 type: Boolean,
+        //                 default: false,
+        //                 select: false,
+        //               },
+        //               is_active: {
+        //                 type: Boolean,
+        //                 default: true,
+        //                 select: false,
+        //               },
+        //             },
+        //           },
+        //         },
+        //       },
+        //       //   required: true,
+        //     },
+        //   },
+        // ],
       },
     },
   },

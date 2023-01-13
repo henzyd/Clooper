@@ -1,0 +1,65 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Certgo API",
+    "description": "## Certgo API description.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://certgo.hng.tech/api"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Unauthourized User"
+    },
+    {
+      "name": "Authorization"
+    },
+    {
+      "name": "Dashboard"
+    },
+    {
+      "name": "Mailing"
+    },
+    {
+      "name": "Career"
+    },
+    {
+      "name": "Pricing"
+    },
+    {
+      "name": "Contact"
+    }
+  ],
+  "paths": {
+    "/api/upload/csv": {
+      "post": {
+        "tags": ["Unauthourized User"],
+        "summary": "Upload certificate CSV",
+        "description": "Upload the certificate CSV to process the CSV file and generate a certificate. Send a post request with your CSV file to the endpoint The key name should be **file**",
+        "requestBody": {
+          "description": "CSV file",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/upload_csv_body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "server response"
+          }
+        },
+        "security": [
+          {
+            "jwtToken": []
+          }
+        ]
+      }
+    }
+  }
+}
