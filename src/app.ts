@@ -1,14 +1,21 @@
+import fs from "fs";
 import morgan from "morgan";
 import express from "express";
 import swaggerUi from "swagger-ui-express";
-import swaggerJSDoc from "swagger-jsdoc";
-import { options } from "./docs/swaggerOptions.js";
+// import swaggerJSDoc from "swagger-jsdoc";
+import swaggerAutogen from "swagger-autogen";
 
 import homeRouter from "./routes/home.js";
 import userRouter from "./routes/user.js";
 import authRouter from "./routes/auth.js";
 import propertyRouter from "./routes/property.js";
 import adminControl from "./routes/admin.js";
+
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -34,11 +41,18 @@ const op2 = {
   },
   apis: ["./routes/*.js"],
 };
+const options = {
+  routes: "./routes/*.js",
+};
 
-const swaggerSpec = swaggerJSDoc(options);
+const data = JSON.parse(
+  fs.readFileSync(`${__dirname}/docs/swagger_output.json`, "utf8")
+);
+
 // const swaggerSpec = swaggerJSDoc(op2);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
+// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(data));
+// app.use(swaggerAutogen.);
 app.use(`${basePath}/`, homeRouter);
 app.use(`${basePath}/users`, userRouter);
 app.use(`${basePath}/auth`, authRouter);

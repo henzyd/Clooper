@@ -19,7 +19,7 @@ async function createProperty(req: Request, res: Response, next: NextFunction) {
   //? Saving the data and catching errors
   try {
     const newProperty = await property.save();
-    console.log(property);
+    console.log(currentUser._id);
 
     if (!newProperty) {
       return responseHandler(res, 304, "Fail", "property return nothing");
