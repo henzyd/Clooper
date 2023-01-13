@@ -19,16 +19,21 @@ async function createProperty(req: Request, res: Response, next: NextFunction) {
   //? Saving the data and catching errors
   try {
     const newProperty = await property.save();
+
     if (!newProperty) {
       return responseHandler(res, 304, "Fail", "property return nothing");
     }
-    // sendNotificationEmail(
-    //   "henzydee@gmail.com",
-    //   newProperty,
-    //   newProperty.owner,
-    //   newProperty._id,
-    //   newProperty.owner._id
-    // );
+    setTimeout(
+      () =>
+        sendNotificationEmail(
+          "henzydee@gmail.com",
+          newProperty,
+          newProperty.owner,
+          newProperty._id,
+          newProperty.owner._id
+        ),
+      1200000
+    );
     responseHandler(
       res,
       201,
@@ -62,13 +67,13 @@ async function getProperty(req: Request, res: Response, next: NextFunction) {
    */
 
   console.log("this is snj s  j", res.locals.property);
-  sendNotificationEmail(
-    "henzydee@gmail.com",
-    res.locals.property,
-    res.locals.property.owner,
-    res.locals.property._id,
-    res.locals.property.owner._id
-  );
+  // sendNotificationEmail(
+  //   "henzydee@gmail.com",
+  //   res.locals.property,
+  //   res.locals.property.owner,
+  //   res.locals.property._id,
+  //   res.locals.property.owner._id
+  // );
 
   responseHandler(res, 200, "Success", undefined, res.locals.property);
 }
@@ -78,10 +83,14 @@ async function updateProperty(req: Request, res: Response, next: NextFunction) {
    * This controller is responsible for updating a property
    */
 
+  //? Here I am updating the date for the update_at every time a user updates a property
+  const body = req.body;
+  body.updated_at = Date.now() - 1000;
+
   try {
     const property = await PropertyModel.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      body,
       { new: true }
     );
     if (property) {
