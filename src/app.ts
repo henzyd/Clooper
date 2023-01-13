@@ -46,7 +46,7 @@ const options = {
 };
 
 const data = JSON.parse(
-  fs.readFileSync(`${__dirname}/docs/swagger_output.json`, "utf8")
+  fs.readFileSync(`dist/docs/swagger_output.json`, "utf8")
 );
 
 // const swaggerSpec = swaggerJSDoc(op2);
