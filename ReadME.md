@@ -21,8 +21,11 @@ When an admin wants to signup themselves they will recieve an email containing t
 
 This is what the path will look like:
 
-- https://henzyd-clooper.onrender.com/api/v1/auth/4b6235b7f57db8e43048d263788791b652e29127d05b998fcc85934f03bfd296/admin-signup --> `POST` Sign up for an admin
+- https://henzyd-clooper.onrender.com/api/v1/auth/4b6235b7f57db8e43048d263788791b652e29127d05b998fcc85934f03bfd296/admin-signup --> `POST` Create an admin
 - https://henzyd-clooper.onrender.com/api/v1/auth/4b6235b7f57db8e43048d263788791b652e29127d05b998fcc85934f03bfd296/admin-login --> `POST` Login for an admin
+- https://henzyd-clooper.onrender.com/api/v1/auth/4b6235b7f57db8e43048d263788791b652e29127d05b998fcc85934f03bfd296/property --> `POST` Get all property
+- https://henzyd-clooper.onrender.com/api/v1/auth/4b6235b7f57db8e43048d263788791b652e29127d05b998fcc85934f03bfd296/publish-property/:id --> `POST` Publush and Unpublish a property
+- https://henzyd-clooper.onrender.com/api/v1/auth/4b6235b7f57db8e43048d263788791b652e29127d05b998fcc85934f03bfd296/user-active/:id --> `POST` Activate or Deactivate a user
 
 **Property path**
 
