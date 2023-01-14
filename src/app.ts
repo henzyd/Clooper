@@ -24,7 +24,7 @@ app.use(express.json());
 
 const basePath = "/api/v1";
 
-const data = JSON.parse(fs.readFileSync(`docs/swagger_output.json`, "utf8"));
+const data = JSON.parse(fs.readFileSync(`./docs/swagger_output.json`, "utf8"));
 
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(data));
 app.use(`${basePath}/`, homeRouter);
