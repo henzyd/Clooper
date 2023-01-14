@@ -8,3 +8,8 @@ namespace NodeJS {
     ADMIN_HASH_ROUTE: string;
   }
 }
+
+declare module "*.json" {
+  const value: any;
+  export default value;
+}

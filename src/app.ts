@@ -10,6 +10,7 @@ import userRouter from "./routes/user.js";
 import authRouter from "./routes/auth.js";
 import propertyRouter from "./routes/property.js";
 import adminControl from "./routes/admin.js";
+import swagger_output from "./docs/swagger_output.json";
 
 import path from "path";
 import { fileURLToPath } from "url";
@@ -24,11 +25,11 @@ app.use(express.json());
 
 const basePath = "/api/v1";
 
-const data = JSON.parse(
-  fs.readFileSync(`${__dirname}/docs/swagger_output.json`, "utf8")
-);
+// const data = JSON.parse(
+//   fs.readFileSync(`${__dirname}/docs/swagger_output.json`, "utf8")
+// );
 
-app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(data));
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swagger_output));
 app.use(`${basePath}/`, homeRouter);
 app.use(`${basePath}/users`, userRouter);
 app.use(`${basePath}/auth`, authRouter);
