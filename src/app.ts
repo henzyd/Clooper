@@ -24,35 +24,9 @@ app.use(express.json());
 
 const basePath = "/api/v1";
 
-const op2 = {
-  definition: {
-    openapi: "3.0.3",
-    info: {
-      title: "Swagger Property Manager - OpenAPI 3.0.3",
-      description:
-        "This is a property manager built with Express.js, TypeScript and Mongoose",
-      version: "1.0.0",
-    },
-    servers: [
-      {
-        url: "http://localhost:3020",
-      },
-    ],
-  },
-  apis: ["./routes/*.js"],
-};
-const options = {
-  routes: "./routes/*.js",
-};
+const data = JSON.parse(fs.readFileSync(`docs/swagger_output.json`, "utf8"));
 
-const data = JSON.parse(
-  fs.readFileSync(`dist/docs/swagger_output.json`, "utf8")
-);
-
-// const swaggerSpec = swaggerJSDoc(op2);
-// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(data));
-// app.use(swaggerAutogen.);
 app.use(`${basePath}/`, homeRouter);
 app.use(`${basePath}/users`, userRouter);
 app.use(`${basePath}/auth`, authRouter);
