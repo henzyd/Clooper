@@ -16,7 +16,7 @@ const doc = {
   host: "https://henzyd-clooper.onrender.com",
 };
 
-const outputFile = `dist/docs/swagger_output.json`;
+const outputFile = `docs/swagger_output.json`;
 const endpointsFiles = [`dist/app.js`];
 
 swaggerAutogen(outputFile, endpointsFiles, doc);
