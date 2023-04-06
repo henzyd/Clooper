@@ -1,6 +1,7 @@
 import fs from "fs";
 import morgan from "morgan";
 import express from "express";
+import cors from "cors";
 import swaggerUi from "swagger-ui-express";
 // import swaggerJSDoc from "swagger-jsdoc";
 import swaggerAutogen from "swagger-autogen";
@@ -19,7 +20,16 @@ import { fileURLToPath } from "url";
 // const __dirname = path.dirname(__filename);
 
 const app = express();
-
+app.use(cors());
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  next();
+});
 app.use(morgan("dev"));
 app.use(express.json());
 
