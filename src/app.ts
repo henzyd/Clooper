@@ -15,8 +15,8 @@ import swagger_output from "./docs/swagger_output.json";
 import path from "path";
 import { fileURLToPath } from "url";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -29,7 +29,7 @@ const basePath = "/api/v1";
 //   fs.readFileSync(`${__dirname}/docs/swagger_output.json`, "utf8")
 // );
 
-app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swagger_output));
+// app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swagger_output));
 app.use(`${basePath}/`, homeRouter);
 app.use(`${basePath}/users`, userRouter);
 app.use(`${basePath}/auth`, authRouter);
